@@ -1,4 +1,4 @@
-package main
+package kuncore
 
 import (
 	"testing"
@@ -45,7 +45,6 @@ func BenchmarkMutextMapCC_Increase(b *testing.B) {
 func BenchmarkMutextMapCC_Decrease(b *testing.B) {
 	decr(&mm, b)
 }
-
 
 func BenchmarkNoSafeCC_Increase(b *testing.B) {
 	incr(&ns, b)

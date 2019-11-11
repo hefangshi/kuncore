@@ -1,4 +1,4 @@
-package main
+package kuncore
 
 type ConcurrencyCounter interface {
 	Increase(key string)

@@ -1,4 +1,4 @@
-module icode.baidu.com/baidu/faas/kuncore
+module github/hefangshi/kuncore
 
 go 1.12
 
