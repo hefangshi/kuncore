@@ -1,6 +1,7 @@
 package kuncore
 
 import (
+	"sync"
 	"testing"
 )
 
@@ -20,6 +21,30 @@ func decr(cc ConcurrencyCounter, b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		cc.Decrease(keys[i%len(keys)])
 	}
+}
+
+func parallelIncr(cc ConcurrencyCounter, b *testing.B) {
+	wg := sync.WaitGroup{}
+	wg.Add(b.N)
+	for i := 0; i < b.N; i++ {
+		go func(i int) {
+			cc.Increase(keys[i%len(keys)])
+			wg.Done()
+		}(i)
+	}
+	wg.Wait()
+}
+
+func parallelDecr(cc ConcurrencyCounter, b *testing.B) {
+	wg := sync.WaitGroup{}
+	wg.Add(b.N)
+	for i := 0; i < b.N; i++ {
+		go func(i int) {
+			cc.Decrease(keys[i%len(keys)])
+			wg.Done()
+		}(i)
+	}
+	wg.Wait()
 }
 
 func BenchmarkSyncMapCC_Increase(b *testing.B) {
@@ -53,3 +78,35 @@ func BenchmarkNoSafeCC_Increase(b *testing.B) {
 func BenchmarkNoSafeCC_Decrease(b *testing.B) {
 	decr(&ns, b)
 }
+
+func BenchmarkParallelSyncMapCC_Increase(b *testing.B) {
+	parallelIncr(&sm, b)
+}
+
+func BenchmarkParallelSyncMapCC_Decrease(b *testing.B) {
+	parallelDecr(&sm, b)
+}
+
+func BenchmarkParallelLockfreeMapCC_Increase(b *testing.B) {
+	parallelIncr(&hm, b)
+}
+
+func BenchmarkParallelLockfreeMapCC_Decrease(b *testing.B) {
+	parallelDecr(&hm, b)
+}
+
+func BenchmarkParallelMutextMapCC_Increase(b *testing.B) {
+	parallelIncr(&mm, b)
+}
+
+func BenchmarkParallelMutextMapCC_Decrease(b *testing.B) {
+	parallelDecr(&mm, b)
+}
+
+//func BenchmarkNoSafeCC_Increase(b *testing.B) {
+//	incr(&ns, b)
+//}
+//
+//func BenchmarkNoSafeCC_Decrease(b *testing.B) {
+//	decr(&ns, b)
+//}
