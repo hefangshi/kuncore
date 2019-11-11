@@ -8,6 +8,7 @@ var keys = []string{"abc1", "abc2", "abc3", "abc4", "abc5", "abc6"}
 var sm = SyncMapCC{}
 var hm = NewLockfreeMapCC()
 var mm = NewMutexMapCC()
+var ns = NewNoSafeCC()
 
 func incr(cc ConcurrencyCounter, b *testing.B) {
 	for i := 0; i < b.N; i++ {
@@ -43,4 +44,13 @@ func BenchmarkMutextMapCC_Increase(b *testing.B) {
 
 func BenchmarkMutextMapCC_Decrease(b *testing.B) {
 	decr(&mm, b)
+}
+
+
+func BenchmarkNoSafeCC_Increase(b *testing.B) {
+	incr(&ns, b)
+}
+
+func BenchmarkNoSafeCC_Decrease(b *testing.B) {
+	decr(&ns, b)
 }
