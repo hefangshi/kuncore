@@ -2,7 +2,6 @@ package kuncore
 
 import (
 	"sync"
-	"sync/atomic"
 )
 
 type MutexMapCC struct {
@@ -23,8 +22,7 @@ func (cc *MutexMapCC) Increase(key string) {
 		var k int64
 		cc.c[key] = &k
 	}
-	c := cc.c[key]
-	atomic.AddInt64(c, 1)
+	*cc.c[key]++
 }
 
 func (cc *MutexMapCC) Decrease(key string) {
@@ -34,10 +32,10 @@ func (cc *MutexMapCC) Decrease(key string) {
 	if c == nil {
 		return
 	}
-	if atomic.LoadInt64(c) < 0 {
-		atomic.StoreInt64(c, 0)
+	if *cc.c[key] <= 0 {
+		*cc.c[key] = 0
 	} else {
-		atomic.AddInt64(c, -1)
+		*cc.c[key]--
 	}
 }
 
@@ -48,5 +46,5 @@ func (cc *MutexMapCC) Count(key string) int64 {
 	if c == nil {
 		return 0
 	}
-	return atomic.LoadInt64(c)
+	return *c
 }
