@@ -60,9 +60,7 @@ var keys = []string{"abc1", "abc2", "abc3", "abc4", "abc5", "abc6"}
 func BenchmarkIncrease(b *testing.B) {
 	for _, bm := range benchmarksWithNoSafeMapCC {
 		b.Run(bm.name, func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
-				incr(keys, bm.cc, b)
-			}
+			incr(keys, bm.cc, b)
 		})
 	}
 }
@@ -70,9 +68,7 @@ func BenchmarkIncrease(b *testing.B) {
 func BenchmarkDecrease(b *testing.B) {
 	for _, bm := range benchmarksWithNoSafeMapCC {
 		b.Run(bm.name, func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
-				decr(keys, bm.cc, b)
-			}
+			decr(keys, bm.cc, b)
 		})
 	}
 }
@@ -80,9 +76,7 @@ func BenchmarkDecrease(b *testing.B) {
 func BenchmarkParallelIncrease(b *testing.B) {
 	for _, bm := range benchmarks {
 		b.Run(bm.name, func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
-				parallelIncr(keys, bm.cc, b)
-			}
+			parallelIncr(keys, bm.cc, b)
 		})
 	}
 }
@@ -90,9 +84,7 @@ func BenchmarkParallelIncrease(b *testing.B) {
 func BenchmarkParallelDncrease(b *testing.B) {
 	for _, bm := range benchmarks {
 		b.Run(bm.name, func(b *testing.B) {
-			for i := 0; i < b.N; i++ {
-				parallelDecr(keys, bm.cc, b)
-			}
+			parallelDecr(keys, bm.cc, b)
 		})
 	}
 }
