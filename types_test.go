@@ -78,7 +78,7 @@ func BenchmarkDecrease(b *testing.B) {
 }
 
 func BenchmarkParallelIncrease(b *testing.B) {
-	for _, bm := range benchmarksWithNoSafeMapCC {
+	for _, bm := range benchmarks {
 		b.Run(bm.name, func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				parallelIncr(keys, bm.cc, b)
@@ -88,7 +88,7 @@ func BenchmarkParallelIncrease(b *testing.B) {
 }
 
 func BenchmarkParallelDncrease(b *testing.B) {
-	for _, bm := range benchmarksWithNoSafeMapCC {
+	for _, bm := range benchmarks {
 		b.Run(bm.name, func(b *testing.B) {
 			for i := 0; i < b.N; i++ {
 				parallelDecr(keys, bm.cc, b)
