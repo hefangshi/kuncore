@@ -6,17 +6,28 @@ go test -bench=.
 ```
 
 ```bash
+Don't use NoSafeCC in production
 goos: darwin
 goarch: amd64
 pkg: github/hefangshi/kuncore
-BenchmarkSyncMapCC_Increase-4       	20000000	       112 ns/op
-BenchmarkSyncMapCC_Decrease-4       	10000000	       130 ns/op
-BenchmarkLockfreeMapCC_Increase-4   	10000000	       167 ns/op
-BenchmarkLockfreeMapCC_Decrease-4   	10000000	       150 ns/op
-BenchmarkMutextMapCC_Increase-4     	10000000	       117 ns/op
-BenchmarkMutextMapCC_Decrease-4     	20000000	        98.2 ns/op
-BenchmarkNoSafeCC_Increase-4        	50000000	        33.2 ns/op
-BenchmarkNoSafeCC_Decrease-4        	50000000	        32.8 ns/op
+BenchmarkIncrease/SyncMapCC-4 	10000000	       117 ns/op
+BenchmarkIncrease/LockfreeMapCC-4         	10000000	       144 ns/op
+BenchmarkIncrease/MutexMapCC-4            	20000000	       114 ns/op
+BenchmarkIncrease/ChannelCC-4             	 5000000	       323 ns/op
+BenchmarkIncrease/NoSafeCC-4              	50000000	        33.6 ns/op
+BenchmarkDecrease/SyncMapCC-4             	20000000	       111 ns/op
+BenchmarkDecrease/LockfreeMapCC-4         	10000000	       144 ns/op
+BenchmarkDecrease/MutexMapCC-4            	20000000	        98.0 ns/op
+BenchmarkDecrease/ChannelCC-4             	 5000000	       335 ns/op
+BenchmarkDecrease/NoSafeCC-4              	50000000	        33.5 ns/op
+BenchmarkParallelIncrease/SyncMapCC-4     	 1000000	      6316 ns/op
+BenchmarkParallelIncrease/LockfreeMapCC-4 	 5000000	       429 ns/op
+BenchmarkParallelIncrease/MutexMapCC-4    	 3000000	       476 ns/op
+BenchmarkParallelIncrease/ChannelCC-4     	 2000000	       724 ns/op
+BenchmarkParallelDncrease/SyncMapCC-4     	 5000000	       354 ns/op
+BenchmarkParallelDncrease/LockfreeMapCC-4 	 5000000	       347 ns/op
+BenchmarkParallelDncrease/MutexMapCC-4    	 3000000	       505 ns/op
+BenchmarkParallelDncrease/ChannelCC-4     	 3000000	       831 ns/op
 PASS
-ok  	github/hefangshi/kuncore	14.938s
+ok  	github/hefangshi/kuncore	49.215s
 ```

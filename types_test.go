@@ -48,6 +48,7 @@ var benchmarks = []struct {
 	{"SyncMapCC", NewSyncMapCC()},
 	{"LockfreeMapCC", NewLockfreeMapCC()},
 	{"MutexMapCC", NewMutexMapCC()},
+	{"ChannelCC", NewChannelCC()},
 }
 
 var benchmarksWithNoSafeMapCC = append(benchmarks, struct {
@@ -81,7 +82,7 @@ func BenchmarkParallelIncrease(b *testing.B) {
 	}
 }
 
-func BenchmarkParallelDncrease(b *testing.B) {
+func BenchmarkParallelDecrease(b *testing.B) {
 	for _, bm := range benchmarks {
 		b.Run(bm.name, func(b *testing.B) {
 			parallelDecr(keys, bm.cc, b)
