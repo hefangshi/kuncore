@@ -5,25 +5,19 @@ import (
 	"testing"
 )
 
-var keys = []string{"abc1", "abc2", "abc3", "abc4", "abc5", "abc6"}
-var sm = SyncMapCC{}
-var hm = NewLockfreeMapCC()
-var mm = NewMutexMapCC()
-var ns = NewNoSafeCC()
-
-func incr(cc ConcurrencyCounter, b *testing.B) {
+func incr(keys []string, cc ConcurrencyCounter, b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		cc.Increase(keys[i%len(keys)])
 	}
 }
 
-func decr(cc ConcurrencyCounter, b *testing.B) {
+func decr(keys []string, cc ConcurrencyCounter, b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		cc.Decrease(keys[i%len(keys)])
 	}
 }
 
-func parallelIncr(cc ConcurrencyCounter, b *testing.B) {
+func parallelIncr(keys []string, cc ConcurrencyCounter, b *testing.B) {
 	wg := sync.WaitGroup{}
 	wg.Add(b.N)
 	for i := 0; i < b.N; i++ {
@@ -35,7 +29,7 @@ func parallelIncr(cc ConcurrencyCounter, b *testing.B) {
 	wg.Wait()
 }
 
-func parallelDecr(cc ConcurrencyCounter, b *testing.B) {
+func parallelDecr(keys []string, cc ConcurrencyCounter, b *testing.B) {
 	wg := sync.WaitGroup{}
 	wg.Add(b.N)
 	for i := 0; i < b.N; i++ {
@@ -47,66 +41,58 @@ func parallelDecr(cc ConcurrencyCounter, b *testing.B) {
 	wg.Wait()
 }
 
-func BenchmarkSyncMapCC_Increase(b *testing.B) {
-	incr(&sm, b)
+var benchmarks = []struct {
+	name string
+	cc   ConcurrencyCounter
+}{
+	{"SyncMapCC", NewSyncMapCC()},
+	{"LockfreeMapCC", NewLockfreeMapCC()},
+	{"MutexMapCC", NewMutexMapCC()},
 }
 
-func BenchmarkSyncMapCC_Decrease(b *testing.B) {
-	decr(&sm, b)
+var benchmarksWithNoSafeMapCC = append(benchmarks, struct {
+	name string
+	cc   ConcurrencyCounter
+}{"NoSafeCC", NewNoSafeCC()})
+
+var keys = []string{"abc1", "abc2", "abc3", "abc4", "abc5", "abc6"}
+
+func BenchmarkIncrease(b *testing.B) {
+	for _, bm := range benchmarksWithNoSafeMapCC {
+		b.Run(bm.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				incr(keys, bm.cc, b)
+			}
+		})
+	}
 }
 
-func BenchmarkLockfreeMapCC_Increase(b *testing.B) {
-	incr(&hm, b)
+func BenchmarkDecrease(b *testing.B) {
+	for _, bm := range benchmarksWithNoSafeMapCC {
+		b.Run(bm.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				decr(keys, bm.cc, b)
+			}
+		})
+	}
 }
 
-func BenchmarkLockfreeMapCC_Decrease(b *testing.B) {
-	decr(&hm, b)
+func BenchmarkParallelIncrease(b *testing.B) {
+	for _, bm := range benchmarksWithNoSafeMapCC {
+		b.Run(bm.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				parallelIncr(keys, bm.cc, b)
+			}
+		})
+	}
 }
 
-func BenchmarkMutextMapCC_Increase(b *testing.B) {
-	incr(&mm, b)
+func BenchmarkParallelDncrease(b *testing.B) {
+	for _, bm := range benchmarksWithNoSafeMapCC {
+		b.Run(bm.name, func(b *testing.B) {
+			for i := 0; i < b.N; i++ {
+				parallelDecr(keys, bm.cc, b)
+			}
+		})
+	}
 }
-
-func BenchmarkMutextMapCC_Decrease(b *testing.B) {
-	decr(&mm, b)
-}
-
-func BenchmarkNoSafeCC_Increase(b *testing.B) {
-	incr(&ns, b)
-}
-
-func BenchmarkNoSafeCC_Decrease(b *testing.B) {
-	decr(&ns, b)
-}
-
-func BenchmarkParallelSyncMapCC_Increase(b *testing.B) {
-	parallelIncr(&sm, b)
-}
-
-func BenchmarkParallelSyncMapCC_Decrease(b *testing.B) {
-	parallelDecr(&sm, b)
-}
-
-func BenchmarkParallelLockfreeMapCC_Increase(b *testing.B) {
-	parallelIncr(&hm, b)
-}
-
-func BenchmarkParallelLockfreeMapCC_Decrease(b *testing.B) {
-	parallelDecr(&hm, b)
-}
-
-func BenchmarkParallelMutextMapCC_Increase(b *testing.B) {
-	parallelIncr(&mm, b)
-}
-
-func BenchmarkParallelMutextMapCC_Decrease(b *testing.B) {
-	parallelDecr(&mm, b)
-}
-
-//func BenchmarkNoSafeCC_Increase(b *testing.B) {
-//	incr(&ns, b)
-//}
-//
-//func BenchmarkNoSafeCC_Decrease(b *testing.B) {
-//	decr(&ns, b)
-//}

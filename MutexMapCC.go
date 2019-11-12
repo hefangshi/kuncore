@@ -10,8 +10,8 @@ type MutexMapCC struct {
 	m sync.RWMutex
 }
 
-func NewMutexMapCC() MutexMapCC {
-	return MutexMapCC{
+func NewMutexMapCC() *MutexMapCC {
+	return &MutexMapCC{
 		c: make(map[string]*int64),
 	}
 }

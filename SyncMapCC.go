@@ -9,6 +9,10 @@ type SyncMapCC struct {
 	sm sync.Map
 }
 
+func NewSyncMapCC() *SyncMapCC {
+	return &SyncMapCC{}
+}
+
 func (cc *SyncMapCC) Increase(key string) {
 	var k int64
 	c, _ := cc.sm.LoadOrStore(key, &k)

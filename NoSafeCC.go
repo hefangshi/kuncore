@@ -6,9 +6,9 @@ type NoSafeCC struct {
 	m map[string]int64
 }
 
-func NewNoSafeCC() NoSafeCC {
-	fmt.Println("Don't use in production")
-	return NoSafeCC{
+func NewNoSafeCC() *NoSafeCC {
+	fmt.Println("Don't use NoSafeCC in production")
+	return &NoSafeCC{
 		m: make(map[string]int64),
 	}
 }

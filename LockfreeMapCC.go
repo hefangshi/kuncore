@@ -9,8 +9,8 @@ type LockfreeMapCC struct {
 	hm *hashmap.HashMap
 }
 
-func NewLockfreeMapCC() LockfreeMapCC {
-	return LockfreeMapCC{
+func NewLockfreeMapCC() *LockfreeMapCC {
+	return &LockfreeMapCC{
 		hm: &hashmap.HashMap{},
 	}
 }
