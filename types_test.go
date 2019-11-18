@@ -17,6 +17,7 @@ var benchmarks = []struct {
 	{"LockfreeMapCC", NewLockfreeMapCC()},
 	{"MutexMapCC", NewMutexMapCC()},
 	{"ChannelCC", NewChannelCC()},
+	{"CMapCC", NewCMapCC()},
 }
 
 var benchmarksWithNoSafeMapCC = append(benchmarks, struct {
